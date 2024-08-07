@@ -12,6 +12,9 @@ then
 fi
 export PATH
 
+# VARIABLES
+yadm_hosts_rc_dir="~/.dotfiles/host_rcs"
+
 # tyrant2 config
 if [[ -f ~/ansible.cfg ]]; then
 	export VIRTUAL_ENV_DISABLE_PROMPT=1
@@ -51,6 +54,11 @@ for host in ${GIT_HOSTS[@]}; do
 done
 
 ### end Git configs
+
+# HOST SPECIFIC RC
+if  [[ -f ${yadm_hosts_rc_dir}/${HOSTNAME%%.*} ]]; then
+	. ${yadm_hosts_rc_dir}/${HOSTNAME%%.*}
+fi
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=

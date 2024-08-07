@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+
+args="$*";
+cmd="python /home/ekwejuno/ansible/inventory/inventory.py";
+echo "$cmd jq -r $args";
+$cmd |jq -r $args;

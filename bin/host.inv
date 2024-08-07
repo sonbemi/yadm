@@ -1,0 +1,100 @@
+#!/usr/bin/bash
+#
+# Variables
+apiurl='https://smg-inventory.techservices.illinois.edu/wapi'
+api_ver='v3'
+exact_match==true
+
+# Usage
+usage() {
+  cat << EOF
+
+  -h | --help displays this message
+  -a | --host_f
+     example invc -a key:value
+    
+  -p partial match; search for substring
+  -l list hosts
+
+EOF
+}
+#
+# check for arguments
+has_arguments() {
+  [[ -n "$2" && "$2" != -* ]];
+}
+
+
+# check flags for -t or --transform
+arg_array=("$@")
+for i in "${!arg_array[@]}"; do
+  if [[ "${arg_array[$i]}" == '-t' || "${arg_array[$i]}" == '--transform' ]]; then
+    ((i++))
+    echo "arg_array:  ${arg_array[$i]}"
+    #FIXME: check following arguement is a transform variable
+    t_arg="${arg_array[$i]}"
+    break
+  fi
+done
+
+# exact search
+exact_search() {
+  if has_arguments $@; then
+    # set delimiter
+    value="${2#*:}"
+    key=".${2%:*}"
+    if [[ -n $t_arg  ]]; then
+      curl $apiurl/$api_ver/hosts | jq -r ".[]|select($key==\"$value\")|$t_arg"
+    else
+      curl $apiurl/$api_ver/hosts | jq -r ".[]|select($key==\"$value\")"
+    fi
+  else
+    # query api
+    curl $apiurl/$api_ver/hosts |jq -r  
+  fi
+}
+
+# partial search
+partial_search() {
+  partial="${2#*:}"
+  key=".${2%:*}"
+  if [[ -n $t_arg ]]; then
+    curl $apiurl/$api_ver/hosts | jq -r ".[]|select($key | contains(\"$partial\")) | $t_arg"
+  else
+    curl $apiurl/$api_ver/hosts | jq -r ".[]|select($key | contains(\"$partial\"))"
+  fi
+}
+
+
+#
+handle_options() {
+  while [ $# -gt 0 ]; do
+    case $1 in
+      -h | --help) # Handle the -h flag
+        usage
+        exit 0
+        ;;
+      -e | --exact) # Handle the -v flag
+        exact_search $@
+        exit
+        ;;
+      -p | --partial) # Handle input argument
+        if has_arguments $@; then
+          partial_search $@
+        else
+          echo "Too few argument. eg: -p 'service:svn'" 
+        fi
+        exit
+        ;;
+      *) 
+      echo "Invalid option"
+    esac
+      shift
+  done
+}
+
+# execute main script
+if [ ! -n "$1" ]; then
+  curl $apiurl/$api_ver/hosts |jq -r  
+fi
+handle_options "$@"

@@ -1,0 +1,19 @@
+### FESTUNG
+
+# check if TMUX_PANE_TITLE is set
+if [[ -z $TMUX_PANE_TITLE ]]; then
+        TMUX_PANE_TITLE=${HOSTNAME%%.*}
+fi
+
+ssh() {
+       tmux rename-window "$(echo $1)"
+       TMUX_PANE_TITLE="$(echo $1)"
+       tmux selectp -T "$(echo $1)"
+       command ssh "$@"
+
+}
+
+# Fix ssh author socket to allow agent forwarding
+if test "$SSH_AUTH_SOCK"; then
+        ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
+fi
