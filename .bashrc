@@ -33,10 +33,24 @@ if [[ -f ~/.twoline_prompt.sh ]]; then
 	source ~/.twoline_prompt.sh
 fi
 
-export GIT_AUTHOR_NAME="Bemi Ekwejunor"
-export GIT_AUTHOR_EMAIL="ekwejuno@illinois.edu"
-export GIT_COMMITER_NAME=${GIT_AUTHOR_NAME}
-export GIT_COMMITER_EMAIL=${GIT_AUTHOR_EMAIL}
+# Git Config
+GIT_HOSTS=(\
+	"tyrant2"
+	"barefaced"
+	"granger-dve"
+	"festung"
+)
+
+for host in ${GIT_HOSTS[@]}; do
+	if [[ $HOSTNAME == $host || $HOSTNAME == "${i}.techservices.illinois.edu" ]]; then
+		export GIT_AUTHOR_NAME="Bemi Ekwejunor"
+		export GIT_AUTHOR_EMAIL="ekwejuno@illinois.edu"
+		export GIT_COMMITER_NAME=${GIT_AUTHOR_NAME}
+		export GIT_COMMITER_EMAIL=${GIT_AUTHOR_EMAIL}
+	fi
+done
+
+### end Git configs
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
