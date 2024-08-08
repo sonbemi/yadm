@@ -28,30 +28,19 @@ if [[ $HOSTNAME == 'tyrant2'* ]]; then
 fi
 
 # Git configs
-if [[ -f ~/.git-completion.sh ]]; then
+if [[ -f ~/./dotfiles/git-completion.sh ]]; then
 	source ~/.git-completion.sh
 fi
 
 if [[ -f ~/.twoline_prompt.sh ]]; then
-	source ~/.twoline_prompt.sh
+	source ~/.dotfiles/twoline_prompt.sh
 fi
 
 # Git Config
-GIT_HOSTS=(\
-	"tyrant2"
-	"barefaced"
-	"granger-dve"
-	"festung"
-)
-
-for host in ${GIT_HOSTS[@]}; do
-	if [[ $HOSTNAME == $host || $HOSTNAME == "${i}.techservices.illinois.edu" ]]; then
-		export GIT_AUTHOR_NAME="Bemi Ekwejunor"
-		export GIT_AUTHOR_EMAIL="ekwejuno@illinois.edu"
-		export GIT_COMMITER_NAME=${GIT_AUTHOR_NAME}
-		export GIT_COMMITER_EMAIL=${GIT_AUTHOR_EMAIL}
-	fi
-done
+export GIT_AUTHOR_NAME="Bemi Ekwejunor"
+export GIT_AUTHOR_EMAIL="ekwejuno@illinois.edu"
+export GIT_COMMITTER_NAME=${GIT_AUTHOR_NAME}
+export GIT_COMMITTER_EMAIL=${GIT_AUTHOR_EMAIL}
 
 ### end Git configs
 
