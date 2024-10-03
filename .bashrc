@@ -32,11 +32,11 @@ fi
 
 # Git configs
 if [[ -f ~/./dotfiles/git-completion.sh ]]; then
-	source ~/.git-completion.sh
+	. ~/.git-completion.sh
 fi
 
 if [[ -f ~/.twoline_prompt.sh ]]; then
-	source ~/.dotfiles/twoline_prompt.sh
+	. ~/.dotfiles/twoline_prompt.sh
 fi
 
 # Git Config
