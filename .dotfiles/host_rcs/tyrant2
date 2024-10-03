@@ -1,0 +1,8 @@
+# Git configs
+if [[ -f ~/.dotfiles/git-completion.sh  ]]; then
+        . ~/.dotfiles/git-completion.sh
+fi
+
+if [[ -f ~/.dotflies/twoline_prompt.sh  ]]; then
+        . ~/.dotfiles/twoline_prompt.sh
+fi

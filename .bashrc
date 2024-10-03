@@ -30,15 +30,6 @@ if [[ $HOSTNAME == 'tyrant2'* ]]; then
 
 fi
 
-# Git configs
-if [[ -f ~/./dotfiles/git-completion.sh ]]; then
-	. ~/.git-completion.sh
-fi
-
-if [[ -f ~/.twoline_prompt.sh ]]; then
-	. ~/.dotfiles/twoline_prompt.sh
-fi
-
 # Git Config
 export GIT_AUTHOR_NAME="Bemi Ekwejunor"
 export GIT_AUTHOR_EMAIL="ekwejuno@illinois.edu"
