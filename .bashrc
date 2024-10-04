@@ -13,7 +13,7 @@ fi
 export PATH
 
 # VARIABLES
-yadm_hosts_rc_dir="~/.dotfiles/host_rcs"
+yadm_hosts_rc_dir="$HOME/.dotfiles/host_rcs"
 
 # tyrant2 config
 if [[ -f ~/ansible.cfg ]]; then
@@ -46,8 +46,8 @@ fi
 ### end Git configs
 
 # HOST SPECIFIC RC
-if  [[ -f ${yadm_hosts_rc_dir}/${HOSTNAME%%.*} ]]; then
-	. ${yadm_hosts_rc_dir}/${HOSTNAME%%.*}
+if  [[ -f "${yadm_hosts_rc_dir}/$HOST" ]]; then
+	. "${yadm_hosts_rc_dir}/$HOST"
 fi
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:

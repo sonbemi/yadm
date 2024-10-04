@@ -2,7 +2,7 @@
 
 # check if TMUX_PANE_TITLE is set
 if [[ -z $TMUX_PANE_TITLE ]]; then
-        TMUX_PANE_TITLE=${HOSTNAME%%.*}
+        TMUX_PANE_TITLE=$HOST
 fi
 
 ssh() {
@@ -17,3 +17,5 @@ ssh() {
 if test "$SSH_AUTH_SOCK"; then
         ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
 fi
+
+# Testing
