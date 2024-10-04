@@ -35,6 +35,13 @@ export GIT_AUTHOR_NAME="Bemi Ekwejunor"
 export GIT_AUTHOR_EMAIL="ekwejuno@illinois.edu"
 export GIT_COMMITTER_NAME=${GIT_AUTHOR_NAME}
 export GIT_COMMITTER_EMAIL=${GIT_AUTHOR_EMAIL}
+# prompt
+if [[ -f ~/.dotfiles/git-completion.sh   ]]; then
+        . ~/.dotfiles/git-completion.sh
+fi
+if [[ -f ~/.dotfiles/twoline_prompt.sh   ]]; then
+        . ~/.dotfiles/twoline_prompt.sh
+fi
 
 ### end Git configs
 
