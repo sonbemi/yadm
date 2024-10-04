@@ -1,0 +1,25 @@
+" ===== General Settings ==================================================
+set number                  "show numbers
+set relativenumber          "show relative numbers
+set mouse=a                 "make mouse usable
+set splitright              "new vsplits on right
+set splitbelow              "new vsplits on right
+set ignorecase smartcase    "ignore case if only lower-case is typed
+
+
+" ===== Vim Plug Settings =================================================
+call plug#begin('~ekwejuno/.vim/plugged')
+Plug 'tpope/vim-surround'
+Plug 'scrooloose/syntastic'
+Plug 'jiangmiao/auto-pairs'
+Plug 'bling/vim-airline'
+call plug#end()
+
+
+" ===== Syntastic recomended settings =====================================
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
