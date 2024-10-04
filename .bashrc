@@ -25,10 +25,10 @@ if [[ $HOSTNAME == 'tyrant2'* ]]; then
 	if [[ -f ~/ansible/etc/yamllint.yml ]]; then
 		export YAMLLINT_CONFIG_FILE=~/ansible/etc/yamllint.yml
 	fi
-	# Create env for tmux
-	export HOST="${HOSTNAME%%.*}"
-
 fi
+
+# Create env for tmux
+export HOST="${HOSTNAME%%.*}"
 
 # Git Config
 export GIT_AUTHOR_NAME="Bemi Ekwejunor"
