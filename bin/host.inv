@@ -4,68 +4,130 @@
 apiurl='https://smg-inventory.techservices.illinois.edu/wapi'
 api_ver='v3'
 exact_match==true
+# Variable for alias keys 
+declare -A host_key_alias=(
+			[hostname]='host hst name'
+			[ad_computer_name]='ad comp_name cmp_name'
+			[service]='svc ser serv'
+			[var_disk]='var disk size space'
+			[ram]='mem memory'
+			[sysclass]='sys class sycls'
+)
+
+# Default output
+transform_default="{hostname,
+                    ostype,
+	            active,
+	            cpu,
+	            ram,
+	            var_disk,
+	            service}"
 
 # Usage
 usage() {
   cat << EOF
 
   -h | --help displays this message
-  -a | --host_f
-     example invc -a key:value
+  -e | --exact
+     example host.inv -a key:value
     
   -p partial match; search for substring
+     example "host.inv -p service:ekwejuno"
   -l list hosts
 
 EOF
+  echo "alias for search keys"
+  for key in "${!host_key_alias[@]}"; do
+    printf "%-5s$key ::::: ${host_key_alias[$key]}\n"
+  done
 }
+
+key_alias() {
+  #printf "%s\n" "${host_key_alias[@]@K}"
+  for k in "${!host_key_alias[@]}"; do
+	if [[ "${host_key_alias[$k]}" == *"$1"* ]]; then
+      	  key=".$k"
+	  break
+        else
+	  key=".$1"
+	fi
+  done
+}
+
 #
 # check for arguments
 has_arguments() {
   [[ -n "$2" && "$2" != -* ]];
 }
 
+check_transform_arg() {
+  chk_arg="$1"
+  if [[ "$chk_arg" == \{*\} ]]; then chk_arg="${chk_arg:1:-1}";fi
+  for i in ${chk_arg//,/ }; do
+    key_alias $i
+    chk_arg="${chk_arg/"$i"/"$key"}"
+  done
+  chk_arg="{$chk_arg}"
+  chk_arg_san_dots="${chk_arg//.}"
+}
 
 # check flags for -t or --transform
 arg_array=("$@")
 for i in "${!arg_array[@]}"; do
   if [[ "${arg_array[$i]}" == '-t' || "${arg_array[$i]}" == '--transform' ]]; then
     ((i++))
-    echo "arg_array:  ${arg_array[$i]}"
-    #FIXME: check following arguement is a transform variable
     t_arg="${arg_array[$i]}"
+    check_transform_arg $t_arg
+    #remove dots from keys
+    t_arg=$chk_arg_san_dots
+    echo "tranformation: $t_arg"
     break
   fi
 done
 
+
 # exact search
 exact_search() {
-  if has_arguments $@; then
     # set delimiter
     value="${2#*:}"
     key=".${2%:*}"
+    key_alias ${key#.}
     if [[ -n $t_arg  ]]; then
-      curl $apiurl/$api_ver/hosts | jq -r ".[]|select($key==\"$value\")|$t_arg"
+      if [[ $t_arg == "{all}" ]]; then
+        curl $apiurl/$api_ver/hosts | jq -r ".[]|select($key==\"$value\")"
+      else
+        curl $apiurl/$api_ver/hosts | jq -r ".[]|select($key==\"$value\")|$t_arg"
+      fi
     else
-      curl $apiurl/$api_ver/hosts | jq -r ".[]|select($key==\"$value\")"
+      curl $apiurl/$api_ver/hosts | jq -r ".[]|select($key==\"$value\")|$transform_default"
     fi
-  else
-    # query api
-    curl $apiurl/$api_ver/hosts |jq -r  
-  fi
 }
 
 # partial search
 partial_search() {
   partial="${2#*:}"
   key=".${2%:*}"
+
+  # Check alias for keysearch
+  key_alias ${key#.}
+  # Transform output
   if [[ -n $t_arg ]]; then
-    curl $apiurl/$api_ver/hosts | jq -r ".[]|select($key | contains(\"$partial\")) | $t_arg"
+      if [[ $t_arg == "{all}" ]]; then
+        curl $apiurl/$api_ver/hosts | jq -r ".[]|select($key | contains(\"$partial\"))"
+      else
+        curl $apiurl/$api_ver/hosts | jq -r ".[]|select($key | contains(\"$partial\")) | $t_arg"
+      fi
   else
-    curl $apiurl/$api_ver/hosts | jq -r ".[]|select($key | contains(\"$partial\"))"
+    curl $apiurl/$api_ver/hosts | jq -r ".[]|select($key | contains(\"$partial\")) | $transform_default"
   fi
 }
 
 
+
+dev() {
+  echo "This is $0 Dev Mode"
+  #key_alias
+}
 #
 handle_options() {
   while [ $# -gt 0 ]; do
@@ -86,6 +148,10 @@ handle_options() {
         fi
         exit
         ;;
+      -d | --dev) # for development and testing
+	dev
+	exit
+	;;
       *) 
       echo "Invalid option"
     esac
