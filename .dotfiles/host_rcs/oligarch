@@ -6,4 +6,4 @@ if [[ $HOSTNAME == 'oligarch'* ]]; then
 fi
 
 # ansible config
-export $ANSIBLE_CONFIG="~/ansible/ansible.cfg"
+export ANSIBLE_CONFIG=~/ansible/ansible.cfg
