@@ -4,3 +4,6 @@
 if [[ $HOSTNAME == 'oligarch'* ]]; then
     source ~mss-cm-control/ansible_venv/bin/activate
 fi
+
+# ansible config
+export $ANSIBLE_CONFIG="~/ansible/ansible.cfg"
