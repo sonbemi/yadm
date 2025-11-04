@@ -1,6 +1,6 @@
 # oligarch: MSS Comanged control
 
 # source control env
-if [[ $hostname == 'oligarch'* ]]; then
+if [[ $HOSTNAME == 'oligarch'* ]]; then
     source ~mss-cm-control/ansible_venv/bin/activate
 fi
